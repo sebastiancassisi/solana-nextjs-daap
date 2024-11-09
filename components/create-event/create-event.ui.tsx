@@ -1,4 +1,4 @@
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler } from "react-hook-form";
 
 export interface EventFormInputs {
   name: string;
@@ -14,7 +14,7 @@ export default function CreateEventModal({
   isOpen: boolean;
   loading: boolean;
   onClose: () => void;
-  onSubmit: (data: EventFormInputs) => void;
+  onSubmit: (data:EventFormInputs) => void;
 }) {
   const {
     register,
@@ -23,18 +23,18 @@ export default function CreateEventModal({
     reset,
   } = useForm<EventFormInputs>({
     defaultValues: {
-      name: '',
+      name: "",
       price: 0,
     },
   });
 
   const handleFormSubmit: SubmitHandler<EventFormInputs> = async (data) => {
     try {
-      console.log('Creando el evento:', data);
+      console.log("Creando el evento:", data);
       onSubmit(data);
       reset();
     } catch (error) {
-      console.error('Error creando el evento:', error);
+      console.error("Error creando el evento:", error);
     }
   };
 
@@ -57,20 +57,20 @@ export default function CreateEventModal({
           <div>
             <label className="block text-sm font-medium">Nombre</label>
             <input
-              {...register('name', {
-                required: 'El nombre es obligatorio',
+              {...register("name", {
+                required: "El nombre es obligatorio",
                 minLength: {
                   value: 3,
-                  message: 'El nombre debe tener al menoos 3 caracteres',
+                  message: "El nombre debe tener al menoos 3 caracteres",
                 },
                 maxLength: {
                   value: 40,
-                  message: 'El nombre NO debe tener maás de 40 caracteres',
+                  message: "El nombre NO debe tener maás de 40 caracteres",
                 },
               })}
               type="text"
               className={`w-full rounded-md border p-2 ${
-                errors.name ? 'border-red-500' : 'border-gray-300'
+                errors.name ? "border-red-500" : "border-gray-300"
               }`}
               placeholder="Nombre del evento"
             />
@@ -80,26 +80,24 @@ export default function CreateEventModal({
           </div>
 
           <div>
-            <label className="block text-sm font-medium">
-              Precio del Ticket (USDC)
-            </label>
+            <label className="block text-sm font-medium">Precio del Ticket (USDC)</label>
             <input
-              {...register('price', {
-                required: 'El precio es obligatorio',
+              {...register("price", {
+                required: "El precio es obligatorio",
                 min: {
                   value: 0,
-                  message: 'El precio debe ser positivo',
+                  message: "El precio debe ser positivo",
                 },
                 max: {
                   value: 1000000,
-                  message: 'Precio muy alto',
+                  message: "Precio muy alto",
                 },
                 valueAsNumber: true,
               })}
               type="number"
               step="1"
               className={`w-full rounded-md border p-2 ${
-                errors.price ? 'border-red-500' : 'border-gray-300'
+                errors.price ? "border-red-500" : "border-gray-300"
               }`}
               placeholder="Precio del ticket"
             />
@@ -124,7 +122,7 @@ export default function CreateEventModal({
               disabled={loading}
               className="rounded-md bg-blue-500 px-4 py-2 font-medium text-white hover:bg-blue-600"
             >
-              {loading ? 'Creando...' : 'Crear Evento'}
+              {loading ? "Creando..." : "Crear Evento"}
             </button>
           </div>
         </form>

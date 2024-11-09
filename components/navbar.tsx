@@ -16,7 +16,7 @@ export default function Navbar() {
   const { publicKey } = useWallet();
 
   return (
-    <header className="bg-blue-500 p-4 flex justify-between items-center min-h-16 shadow-md">
+    <header className="bg-indigo-400 p-4 flex justify-between items-center min-h-16 shadow-md">
       <Link href="/" className="flex items-center gap-2">
         <Image
           src="/logo.png"

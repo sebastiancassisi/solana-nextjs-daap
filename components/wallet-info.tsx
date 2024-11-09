@@ -54,7 +54,7 @@ const WalletInfo = () => {
   }, [publicKey, connection, balance]);
 
   return (
-    <main className="flex flex-col items-center p-8 bg-blue-100 rounded-lg shadow-md">
+    <main className="flex flex-col items-center p-8 bg-indigo-100 rounded-lg shadow-md">
       {publicKey ? (
         <div className="flex flex-col gap-4">
           <div className="fle flex-row">
@@ -79,14 +79,14 @@ const WalletInfo = () => {
               onClick={getAirdropOnClick}
               disabled={isLoading}
               type="button"
-              className="bg-green-300 text-black font-semibold px-4 py-2 rounded basis-[50%] hover:text-white hover:bg-green-400 disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed"
+              className="bg-blue-500  text-white font-semibold px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed"
             >
               {isLoading ? 'Obteniendo airdrop...' : 'Solicitar Airdrop'}
             </button>
             <button
               onClick={getBalance}
               type="button"
-              className="bg-green-300 text-black font-semibold px-4 py-2 rounded basis-[50%] hover:text-white hover:bg-green-400 "
+              className="bg-blue-500 text-white font-semibold px-4 py-2 rounded  hover:bg-blue-600 "
             >
               Alctualizar Saldo
             </button>

@@ -1,20 +1,46 @@
 'use client';
 import MyEventCard from '@/components/my-event-card';
-import { dataTest } from '@/utils/event-data';
 import { EventData } from '@/utils/event-data';
 import { redirect } from 'next/navigation';
-import { useWallet } from '@solana/wallet-adapter-react';
 import { CreateEventFeature } from '@/components/create-event/create-event.feature';
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useEventManagerProgram } from "@/utils/solana";
+import { useEffect, useState } from "react";
+import { getMyEvents, MyEventInfo } from "@/services/get-my-events.service";
+import { EventAccount } from '@/services/get-events.service';
 
 const MyEvents = () => {
-  const { publicKey } = useWallet();
+
+  const program = useEventManagerProgram();
+  const { connection } = useConnection();
+  const [events, setEvents] = useState<EventAccount[]>([])
+  const { publicKey } = useWallet()
+
   if (!publicKey) {
     return redirect('/');
   }
 
+  const getEvents = async () => {
+    try {
+      getMyEvents(connection, program, publicKey).then( (events) => {
+        if(events){
+          setEvents(events)
+        }
+      })
+    } catch (error) {
+      console.error("Error getting events:", error);
+    }
+  };
+
+  useEffect(() => {
+    getEvents()
+  }, []
+  )
+
+
   return (
     <div>
-      {dataTest.length == 0 ? (
+      {events.length == 0 ? (
         <div className="my-16 flex flex-col items-center">
           <h1 className="text-4xl text-center font-bold">
             Aún no tienes eventos en Solana
@@ -37,8 +63,11 @@ const MyEvents = () => {
       )}
 
       <div className="grid gap-4 px-10 mb-10 xl:grid-cols-4 sm:grid-cols-2">
-        {dataTest.map((event: EventData, index: number) => (
-          <MyEventCard key={index} event={event} />
+        {events.map((event, index) => (
+          <MyEventCard 
+          key={index} 
+          publicKey={event.publicKey}
+          account={event.account}/>
         ))}
       </div>
     </div>

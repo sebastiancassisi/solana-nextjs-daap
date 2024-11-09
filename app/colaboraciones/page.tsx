@@ -1,20 +1,42 @@
-'use client';
-import Link from 'next/link';
-import { dataTest } from '@/utils/event-data';
-import { EventData } from '@/utils/event-data';
-import CollaborationCard from '@/components/collaboration-card';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { redirect } from 'next/navigation';
+'use client'
+import Link from "next/link";
+import CollaborationCard from "@/components/collaboration-card";
+import { redirect } from 'next/navigation'
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useEventManagerProgram } from "@/utils/solana";
+import { useEffect, useState } from "react";
+import { getSponsoredEvents, SponsoredEvent } from "@/services/get-sponsored-events.service";
 
 const Collaborations = () => {
-  const { publicKey } = useWallet();
+  const program = useEventManagerProgram();
+  const { connection } = useConnection();
+  const [sponsored, setSponsored] = useState<SponsoredEvent[]>([])
+  const { publicKey } = useWallet()
   if (!publicKey) {
     return redirect('/');
   }
 
+  const getSponsored = async () => {
+    try {
+      getSponsoredEvents(program, connection, publicKey).then( (sponsored) => {
+        if(sponsored){
+          setSponsored(sponsored)
+        }
+      })
+    } catch (error) {
+      console.error("Error getting events:", error);
+    }
+  };
+
+  useEffect(() => {
+    getSponsored()
+  }, []
+  )
+
+
   return (
     <div>
-      {dataTest.length == 0 ? (
+       { sponsored.length == 0 ?(
         <div className="my-16 flex flex-col items-center">
           <h1 className="text-4xl text-center font-bold">
             Parece que aún no has colaborado con ningún evento
@@ -24,7 +46,7 @@ const Collaborations = () => {
           </h3>
           <Link
             href="/"
-            className="bg-indigo-300 w-50 text-black mt-5 font-semibold px-4 py-1 rounded hover:text-white hover:bg-indigo-400"
+            className="bg-blue-500 w-50 text-white mt-5 font-semibold px-4 py-1 rounded  hover:bg-blue-600"
           >
             Explorar eventos
           </Link>
@@ -38,9 +60,13 @@ const Collaborations = () => {
         </div>
       )}
       <div className="grid gap-4 px-10 mb-10 xl:grid-cols-4 sm:grid-cols-2">
-        {dataTest.map((event, index) => (
-          <CollaborationCard key={index} event={event} />
-        ))}
+      {sponsored.map((event, index) => (
+            <CollaborationCard
+              key={index}
+              event={event.event}
+              tokens={event.tokens}
+            />
+          ))}
       </div>
     </div>
   );

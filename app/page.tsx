@@ -5,10 +5,12 @@ import { EventAccount, getEvents } from '@/services/get-events.service';
 import { useEventManagerProgram } from '@/utils/solana';
 import { CreateEventFeature } from '@/components/create-event/create-event.feature';
 import { useEffect, useState } from 'react';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 
 export default function Home() {
   const program = useEventManagerProgram();
   const [events, setEvents] = useState<EventAccount[]>([]);
+  const { publicKey } = useWallet()
 
   const getAllEvents = async () => {
     try {
@@ -31,7 +33,7 @@ export default function Home() {
       <div>
         <WalletInfo />
       </div>
-      {events.length == 0 ? (
+      {publicKey && events.length == 0 ? (
         <div className="my-16 flex flex-col items-center">
           <h1 className="text-4xl text-center font-bold">
             ¡Lo sentimos! No hay eventos disponibles
@@ -53,7 +55,7 @@ export default function Home() {
       )}
 
       <div className="grid gap-4 px-10 mb-10 xl:grid-cols-4 sm:grid-cols-2">
-        {events.map((event, index) => (
+        {publicKey && events.map((event, index) => (
           <EventCard
             key={index}
             publicKey={event.publicKey}
